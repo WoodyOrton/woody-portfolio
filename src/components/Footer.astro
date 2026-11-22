@@ -80,4 +80,23 @@ const year = new Date().getFullYear();
 	.label {
 		margin-block-start: var(--space-l);
 	}
+
+	/* Contact text rises into view as the footer scrolls on screen. CSS only: browsers
+	   without scroll-driven animations simply show the content. */
+	@media (prefers-reduced-motion: no-preference) {
+		@supports (animation-timeline: view()) {
+			.inner > * {
+				animation: rise linear both;
+				animation-timeline: view();
+				animation-range: entry 0% entry 100%;
+			}
+		}
+	}
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(1.5rem);
+		}
+	}
 </style>
