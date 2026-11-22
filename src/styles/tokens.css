@@ -1,6 +1,6 @@
 /*
   Design tokens: the single source of visual decisions.
-  Direction: warm paper, ink, one racing-green accent. Light serif for voice,
+  Direction: eggshell paper, cocoa ink, one redwood accent. Light serif for voice,
   mono for spec-sheet labels.
 
   Breakpoints (custom properties can't be used in media queries):
@@ -9,16 +9,16 @@
 
 :root {
 	/* Primitives */
-	--paper-50: #f5f3ec;
-	--paper-100: #eceae0;
-	--paper-200: #e0ddd0;
-	--paper-300: #c9c6b6;
-	--ink-900: #1c1f1a;
-	--ink-700: #3d403a;
-	--ink-500: #565a50;
-	--green-700: #0f4a35;
-	--green-600: #17614a;
-	--green-100: #d7e4dc;
+	--paper-50: #fffaf2;
+	--paper-100: #f3ece1;
+	--paper-200: #e6ded3;
+	--paper-300: #cec5bb;
+	--ink-900: #3d271a;
+	--ink-700: #4f3f33;
+	--ink-500: #5d5145;
+	--accent-700: #5a2f1f;
+	--accent-600: #7a3e28;
+	--accent-100: #ecdcd0;
 
 	/* Colour: semantic */
 	--color-bg: var(--paper-50);
@@ -27,12 +27,12 @@
 	--color-text: var(--ink-900);
 	--color-text-soft: var(--ink-700);
 	--color-text-muted: var(--ink-500);
-	--color-accent: var(--green-700);
-	--color-accent-soft: var(--green-100);
+	--color-accent: var(--accent-700);
+	--color-accent-soft: var(--accent-100);
 	--color-border: var(--paper-300);
 	/* Alternate section bands. Translucent so it sits evenly over the page gradient. */
-	--color-band: color-mix(in srgb, var(--green-600) 9%, transparent);
-	--color-focus: var(--green-600);
+	--color-band: color-mix(in srgb, var(--accent-600) 9%, transparent);
+	--color-focus: var(--accent-600);
 	/* LinkedIn's brand blue, used only for its icon. 5.1:1 on the paper background. */
 	--color-linkedin: #0a66c2;
 
