@@ -1,3 +1,4 @@
+import { DEFAULT_SECTION_ORDER, resolveSectionOrder } from './homeSections';
 import type { RawSiteSettings, SiteSettings } from './siteSettings.types';
 
 /** Used until the editor publishes site settings, so the site always builds. */
@@ -12,6 +13,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
 	email: 'woodyorton@outlook.com',
 	linkedinUrl: 'https://www.linkedin.com/in/w-orton/',
 	contactHeading: 'Hiring for a placement or graduate role?',
+	sectionOrder: DEFAULT_SECTION_ORDER,
 	siteTitle: 'Woody Orton · Automotive engineering student',
 	siteDescription:
 		'Portfolio of Woody Orton, an automotive engineering student looking for a placement or graduate role.',
@@ -35,6 +37,7 @@ export const resolveSiteSettings = (raw: RawSiteSettings | null): SiteSettings =
 		email: filled(raw.email) ?? d.email,
 		linkedinUrl: filled(raw.linkedinUrl) ?? d.linkedinUrl,
 		contactHeading: filled(raw.contactHeading) ?? d.contactHeading,
+		sectionOrder: resolveSectionOrder(raw.sectionOrder),
 		siteTitle: filled(raw.siteTitle) ?? d.siteTitle,
 		siteDescription: filled(raw.siteDescription) ?? d.siteDescription,
 	};

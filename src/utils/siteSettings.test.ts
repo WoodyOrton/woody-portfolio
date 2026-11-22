@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SITE_SETTINGS_QUERY } from './sanity';
+import { DEFAULT_SECTION_ORDER } from './homeSections';
 import { DEFAULT_SITE_SETTINGS, resolveSiteSettings } from './siteSettings';
 import { full, minimal, rawCleared } from './siteSettings.fixture';
 
@@ -24,6 +25,7 @@ describe('Site settings query', () => {
 			'email',
 			'linkedinUrl',
 			'contactHeading',
+			'sectionOrder',
 			'siteTitle',
 			'siteDescription',
 		]) {
@@ -91,6 +93,14 @@ describe('Site settings with defaults', () => {
 		});
 	});
 
+	describe('given a document with a partial section order', () => {
+		it('keeps the chosen sections first and adds the rest', () => {
+			const settings = resolveSiteSettings({ ...minimal, sectionOrder: ['hobbies'] });
+			expect(settings.sectionOrder[0]).toBe('hobbies');
+			expect(settings.sectionOrder).toHaveLength(DEFAULT_SECTION_ORDER.length);
+		});
+	});
+
 	describe('given a document with every field filled in', () => {
 		it('keeps what the editor wrote', () => {
 			expect(resolveSiteSettings(full)).toEqual(full);
@@ -109,6 +119,10 @@ describe('Site settings with defaults', () => {
 			expect(settings.about).toBe(DEFAULT_SITE_SETTINGS.about);
 			expect(settings.siteTitle).toBe(DEFAULT_SITE_SETTINGS.siteTitle);
 			expect(settings.siteDescription).toBe(DEFAULT_SITE_SETTINGS.siteDescription);
+		});
+
+		it('shows the home page sections in the standard order', () => {
+			expect(settings.sectionOrder).toEqual(DEFAULT_SECTION_ORDER);
 		});
 
 		it('has no details or skills', () => {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { DEFAULT_SECTION_ORDER } from '../../src/utils/homeSections';
 import { siteSettings } from './siteSettings';
 
 const fields = (siteSettings as unknown as { fields: { name: string; validation?: unknown }[] })
@@ -42,6 +43,7 @@ describe('Site settings schema', () => {
 			'email',
 			'linkedinUrl',
 			'contactHeading',
+			'sectionOrder',
 			'siteTitle',
 			'siteDescription',
 		]);
@@ -91,6 +93,15 @@ describe('Site settings schema', () => {
 
 	it('checks the LinkedIn address is a web link', () => {
 		expect(rulesOf('linkedinUrl').some((call) => call.startsWith('uri'))).toBe(true);
+	});
+
+	it('lets editors choose from every home page section and use each only once', () => {
+		const field = fields.find((f) => f.name === 'sectionOrder') as
+			| { type: string; of?: { options?: { list?: { value: string }[] } }[] }
+			| undefined;
+		expect(field?.type).toBe('array');
+		expect(field?.of?.[0]?.options?.list?.map((item) => item.value)).toEqual(DEFAULT_SECTION_ORDER);
+		expect(rulesOf('sectionOrder')).toContain('unique');
 	});
 
 	it('limits the length of the long text fields', () => {

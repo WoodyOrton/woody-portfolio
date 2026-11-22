@@ -1,3 +1,4 @@
+import { DEFAULT_SECTION_ORDER } from './homeSections';
 import type { ProfileImage, RawSiteSettings, SiteSettings } from './siteSettings.types';
 
 export const profileImage: ProfileImage = {
@@ -31,6 +32,11 @@ export const full: SiteSettings = {
 	email: 'woody@example.org',
 	linkedinUrl: 'https://www.linkedin.com/in/woody-example/',
 	contactHeading: 'Hiring for a placement or graduate role?',
+	sectionOrder: [
+		'skills',
+		'about',
+		...DEFAULT_SECTION_ORDER.filter((id) => id !== 'skills' && id !== 'about'),
+	],
 	siteTitle: 'Woody · Automotive engineering student',
 	siteDescription: 'Portfolio of Woody, an automotive engineering student.',
 };
@@ -42,6 +48,7 @@ export const minimal: SiteSettings = {
 	skills: [],
 	statement: 'I test ideas.',
 	contactHeading: 'Get in touch',
+	sectionOrder: DEFAULT_SECTION_ORDER,
 	siteTitle: 'Woody',
 	siteDescription: 'Portfolio of Woody.',
 };
@@ -59,6 +66,7 @@ export const rawCleared: RawSiteSettings = {
 	details: null,
 	skills: null,
 	contactHeading: null,
+	sectionOrder: null,
 	siteTitle: null,
 	siteDescription: null,
 };

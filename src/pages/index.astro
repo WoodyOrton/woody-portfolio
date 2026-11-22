@@ -21,13 +21,26 @@ const [projects, settings, cv, experiences] = await Promise.all([
 <Base title={settings.siteTitle} description={settings.siteDescription}>
 	<Hero settings={settings} />
 
-	<HomeProjects projects={projects} />
-
-	<About about={settings.about} profileImage={settings.profileImage} />
-	<Experience entries={experiences} />
-	<Experience entries={cv.previousJobs} heading="Previous jobs" id="previous-jobs" />
-	<Education entries={cv.qualifications} />
-	<CvDownload file={cv.cvFile} name={settings.name} />
-	<Skills skills={settings.skills} />
-	<Hobbies entries={cv.hobbies} />
+	{
+		settings.sectionOrder.map((id) => {
+			switch (id) {
+				case 'projects':
+					return <HomeProjects projects={projects} />;
+				case 'about':
+					return <About about={settings.about} profileImage={settings.profileImage} />;
+				case 'experience':
+					return <Experience entries={experiences} />;
+				case 'previousJobs':
+					return <Experience entries={cv.previousJobs} heading="Previous jobs" id="previous-jobs" />;
+				case 'education':
+					return <Education entries={cv.qualifications} />;
+				case 'cvDownload':
+					return <CvDownload file={cv.cvFile} name={settings.name} />;
+				case 'skills':
+					return <Skills skills={settings.skills} />;
+				case 'hobbies':
+					return <Hobbies entries={cv.hobbies} />;
+			}
+		})
+	}
 </Base>

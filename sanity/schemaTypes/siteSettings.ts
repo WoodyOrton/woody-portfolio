@@ -1,3 +1,4 @@
+import { DEFAULT_SECTION_ORDER, HOME_SECTIONS } from '../../src/utils/homeSections';
 import { defineArrayMember, defineField, defineType } from 'sanity';
 
 export const siteSettings = defineType({
@@ -8,6 +9,7 @@ export const siteSettings = defineType({
 		{ name: 'hero', title: 'Hero' },
 		{ name: 'about', title: 'About' },
 		{ name: 'contact', title: 'Contact' },
+		{ name: 'layout', title: 'Page order' },
 		{ name: 'seo', title: 'Search and sharing' },
 	],
 	fields: [
@@ -138,6 +140,28 @@ export const siteSettings = defineType({
 			type: 'string',
 			group: 'contact',
 			validation: (rule) => rule.max(80),
+		}),
+		defineField({
+			name: 'sectionOrder',
+			title: 'Home page section order',
+			description:
+				'Drag the sections into the order you want them on the home page. The intro at the top and the contact section at the bottom always stay where they are. Any section you remove from this list is added back at the end.',
+			type: 'array',
+			group: 'layout',
+			initialValue: DEFAULT_SECTION_ORDER,
+			of: [
+				defineArrayMember({
+					type: 'string',
+					options: {
+						layout: 'dropdown',
+						list: DEFAULT_SECTION_ORDER.map((id) => ({
+							title: HOME_SECTIONS[id].title,
+							value: id,
+						})),
+					},
+				}),
+			],
+			validation: (rule) => rule.unique(),
 		}),
 		defineField({
 			name: 'siteTitle',
