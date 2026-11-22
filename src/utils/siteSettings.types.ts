@@ -1,3 +1,5 @@
+import type { HomeSectionId } from './homeSections';
+
 /** The profile photo shown in the About section. */
 export interface ProfileImage {
 	/** Describes the photo for people who cannot see it. Required in the schema. */
@@ -30,11 +32,13 @@ export interface SiteSettings {
 	email?: string;
 	linkedinUrl?: string;
 	contactHeading: string;
+	/** Every home page section, in the order the editor chose. */
+	sectionOrder: HomeSectionId[];
 	siteTitle: string;
 	siteDescription: string;
 }
 
 /** What Sanity returns: any field the editor has not filled in comes back as null. */
 export type RawSiteSettings = {
-	[K in keyof SiteSettings]?: SiteSettings[K] | null;
-};
+	[K in keyof Omit<SiteSettings, 'sectionOrder'>]?: SiteSettings[K] | null;
+} & { sectionOrder?: (string | null)[] | null };

@@ -94,6 +94,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(`*[_type == "siteSettings"][0]{
 	email,
 	linkedinUrl,
 	contactHeading,
+	sectionOrder,
 	siteTitle,
 	siteDescription
 }`);
