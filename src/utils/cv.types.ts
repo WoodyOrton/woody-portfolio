@@ -6,6 +6,16 @@ export interface ExperienceEntry {
 	period: string;
 	location?: string;
 	description?: string;
+	/** Set when the entry has its own page, at /experience/<slug>. */
+	slug?: string;
+}
+
+export interface HobbyEntry {
+	_key: string;
+	name: string;
+	/** Free text, for example "Since 2018". */
+	period?: string;
+	description?: string;
 }
 
 export interface QualificationEntry {
@@ -25,14 +35,17 @@ export interface CvFile {
 }
 
 export interface Cv {
-	experience: ExperienceEntry[];
+	/** Short earlier jobs: listed on the home page, with no page of their own. */
+	previousJobs: ExperienceEntry[];
 	qualifications: QualificationEntry[];
+	hobbies: HobbyEntry[];
 	cvFile?: CvFile;
 }
 
 /** What Sanity returns: entries may be missing fields and unset values come back as null. */
 export interface RawCv {
-	experience?: Partial<ExperienceEntry>[] | null;
+	previousJobs?: Partial<ExperienceEntry>[] | null;
 	qualifications?: Partial<QualificationEntry>[] | null;
+	hobbies?: Partial<HobbyEntry>[] | null;
 	cvFile?: { url?: string | null; size?: number | null } | null;
 }

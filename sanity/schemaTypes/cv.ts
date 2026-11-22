@@ -2,19 +2,19 @@ import { defineArrayMember, defineField, defineType } from 'sanity';
 
 export const cv = defineType({
 	name: 'cv',
-	title: 'Experience and education',
+	title: 'Education, previous jobs and hobbies',
 	type: 'document',
 	fields: [
 		defineField({
-			name: 'experience',
-			title: 'Experience',
+			name: 'previousJobs',
+			title: 'Previous jobs',
 			description:
-				'Work, placements and team roles. Newest first: drag to reorder. Keep each description to what you did and the result.',
+				'Earlier jobs that need only a few lines. Newest first: drag to reorder. For anything that deserves a full page, add it under Experience instead.',
 			type: 'array',
 			of: [
 				defineArrayMember({
 					type: 'object',
-					name: 'experienceEntry',
+					name: 'previousJobEntry',
 					fields: [
 						defineField({
 							name: 'role',
@@ -56,7 +56,7 @@ export const cv = defineType({
 					preview: { select: { title: 'role', subtitle: 'organisation' } },
 				}),
 			],
-			validation: (rule) => rule.max(8),
+			validation: (rule) => rule.max(12),
 		}),
 		defineField({
 			name: 'qualifications',
@@ -112,6 +112,44 @@ export const cv = defineType({
 			validation: (rule) => rule.max(6),
 		}),
 		defineField({
+			name: 'hobbies',
+			title: 'Hobbies',
+			description: 'Things you do outside work and study. Drag to reorder.',
+			type: 'array',
+			of: [
+				defineArrayMember({
+					type: 'object',
+					name: 'hobbyEntry',
+					fields: [
+						defineField({
+							name: 'name',
+							title: 'Hobby',
+							description: 'For example Karting.',
+							type: 'string',
+							validation: (rule) => rule.required().max(60),
+						}),
+						defineField({
+							name: 'period',
+							title: 'Dates',
+							description: 'Optional. For example Since 2018.',
+							type: 'string',
+							validation: (rule) => rule.max(30),
+						}),
+						defineField({
+							name: 'description',
+							title: 'Detail',
+							description: 'Optional. One or two sentences.',
+							type: 'text',
+							rows: 3,
+							validation: (rule) => rule.max(200),
+						}),
+					],
+					preview: { select: { title: 'name', subtitle: 'period' } },
+				}),
+			],
+			validation: (rule) => rule.max(10),
+		}),
+		defineField({
 			name: 'cvFile',
 			title: 'CV (PDF)',
 			description:
@@ -119,6 +157,64 @@ export const cv = defineType({
 			type: 'file',
 			options: { accept: 'application/pdf' },
 		}),
+		defineField({
+			name: 'experience',
+			title: 'Experience (old list)',
+			description:
+				'Work, placements and team roles. Newest first: drag to reorder. Keep each description to what you did and the result.',
+			type: 'array',
+			readOnly: true,
+			deprecated: {
+				reason:
+					'Each experience now has its own page under Experience in the menu. Copy these entries across, then ignore this list: it is no longer shown on the site.',
+			},
+			of: [
+				defineArrayMember({
+					type: 'object',
+					name: 'experienceEntry',
+					fields: [
+						defineField({
+							name: 'role',
+							title: 'Role',
+							description: 'For example Placement engineer.',
+							type: 'string',
+							validation: (rule) => rule.required().max(80),
+						}),
+						defineField({
+							name: 'organisation',
+							title: 'Organisation',
+							type: 'string',
+							validation: (rule) => rule.required().max(80),
+						}),
+						defineField({
+							name: 'period',
+							title: 'Dates',
+							description: 'For example Jun – Sep 2024, or 2023 – Present.',
+							type: 'string',
+							validation: (rule) => rule.required().max(30),
+						}),
+						defineField({
+							name: 'location',
+							title: 'Location',
+							description: 'Optional. A town or city.',
+							type: 'string',
+							validation: (rule) => rule.max(60),
+						}),
+						defineField({
+							name: 'description',
+							title: 'What you did',
+							description:
+								'Optional. One or two sentences. Start with a verb and include a number if you can, for example "Cut test setup time by a third".',
+							type: 'text',
+							rows: 3,
+							validation: (rule) => rule.max(200),
+						}),
+					],
+					preview: { select: { title: 'role', subtitle: 'organisation' } },
+				}),
+			],
+			validation: (rule) => rule.max(8),
+		}),
 	],
-	preview: { prepare: () => ({ title: 'Experience and education' }) },
+	preview: { prepare: () => ({ title: 'Education, previous jobs and hobbies' }) },
 });

@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { PROJECTS_QUERY, PROJECT_QUERY, imageUrl, toProject } from './sanity';
+import {
+	EXPERIENCES_QUERY,
+	EXPERIENCE_QUERY,
+	PROJECTS_QUERY,
+	PROJECT_QUERY,
+	imageUrl,
+	toExperience,
+	toExperienceSummaries,
+	toProject,
+} from './sanity';
+import { placement } from './cv.fixture';
 
 const imageSource = {
 	_type: 'image',
@@ -124,6 +134,80 @@ describe('Sanity project data', () => {
 				{ _type: 'heading' as const, _key: 'b', text: 'Two' },
 			];
 			expect(toProject({ ...raw, blocks })?.blocks).toEqual(blocks);
+		});
+	});
+});
+
+describe('Experience queries', () => {
+	describe('given the experience list query', () => {
+		it('fetches only experience documents that have a slug', () => {
+			expect(EXPERIENCES_QUERY).toContain('_type == "experience"');
+			expect(EXPERIENCES_QUERY).toContain('defined(slug.current)');
+		});
+
+		it('fetches what the list shows and the page path needs, but not the blocks', () => {
+			for (const field of [
+				'role',
+				'organisation',
+				'period',
+				'location',
+				'description',
+				'"slug": slug.current',
+			]) {
+				expect(EXPERIENCES_QUERY).toContain(field);
+			}
+			expect(EXPERIENCES_QUERY).not.toContain('blocks');
+		});
+
+		it('lists the most recently started first', () => {
+			expect(EXPERIENCES_QUERY).toContain('order(startDate desc');
+		});
+	});
+
+	describe('given the experience page query', () => {
+		it('looks up one experience by its slug', () => {
+			expect(EXPERIENCE_QUERY).toContain('_type == "experience"');
+			expect(EXPERIENCE_QUERY).toContain('slug.current == $slug');
+		});
+
+		it('fetches the page details and the same blocks a project page has', () => {
+			for (const field of ['role', 'organisation', 'period', 'location']) {
+				expect(EXPERIENCE_QUERY).toContain(field);
+			}
+			expect(EXPERIENCE_QUERY).toContain('blocks[]');
+			expect(EXPERIENCE_QUERY).toContain('_type == "heading" => { text, level }');
+			expect(EXPERIENCE_QUERY).toContain('_type == "richText" => { body }');
+			expect(EXPERIENCE_QUERY).toContain('_type == "imageSet"');
+		});
+	});
+});
+
+describe('Sanity experience data', () => {
+	const raw = { ...placement, blocks: null };
+
+	describe('given no experience', () => {
+		it('returns null', () => {
+			expect(toExperience(null)).toBeNull();
+		});
+	});
+
+	describe('given an experience whose blocks have never been set', () => {
+		it('treats the blocks as an empty list', () => {
+			expect(toExperience(raw)?.blocks).toEqual([]);
+		});
+	});
+
+	describe('given a list that includes entries missing a required field', () => {
+		it('leaves those entries out', () => {
+			expect(
+				toExperienceSummaries([{ _key: 'a', role: 'Engineer', slug: 'e' }, placement]),
+			).toEqual([placement]);
+		});
+	});
+
+	describe('given a list with nothing set', () => {
+		it('returns an empty list', () => {
+			expect(toExperienceSummaries(null)).toEqual([]);
 		});
 	});
 });

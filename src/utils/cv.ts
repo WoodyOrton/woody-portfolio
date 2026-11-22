@@ -1,9 +1,10 @@
-import type { Cv, ExperienceEntry, QualificationEntry, RawCv } from './cv.types';
+import type { Cv, ExperienceEntry, HobbyEntry, QualificationEntry, RawCv } from './cv.types';
 
 /** Treats null and empty strings from Sanity as "not filled in". */
 const filled = (value: string | null | undefined) => (value?.trim() ? value : undefined);
 
-const experienceEntry = (raw: Partial<ExperienceEntry>): ExperienceEntry[] => {
+/** Used for previous jobs and for experience pages. An entry that is missing a required field is dropped. */
+export const experienceEntry = (raw: Partial<ExperienceEntry>): ExperienceEntry[] => {
 	const role = filled(raw.role);
 	const organisation = filled(raw.organisation);
 	const period = filled(raw.period);
@@ -15,6 +16,20 @@ const experienceEntry = (raw: Partial<ExperienceEntry>): ExperienceEntry[] => {
 			organisation,
 			period,
 			location: filled(raw.location),
+			description: filled(raw.description),
+			...(filled(raw.slug) ? { slug: raw.slug } : {}),
+		},
+	];
+};
+
+const hobbyEntry = (raw: Partial<HobbyEntry>): HobbyEntry[] => {
+	const name = filled(raw.name);
+	if (!raw._key || !name) return [];
+	return [
+		{
+			_key: raw._key,
+			name,
+			period: filled(raw.period),
 			description: filled(raw.description),
 		},
 	];
@@ -39,8 +54,9 @@ const qualificationEntry = (raw: Partial<QualificationEntry>): QualificationEntr
 
 /** Entries missing a required field are dropped so the page never shows half an entry. */
 export const resolveCv = (raw: RawCv | null): Cv => ({
-	experience: (raw?.experience ?? []).flatMap(experienceEntry),
+	previousJobs: (raw?.previousJobs ?? []).flatMap(experienceEntry),
 	qualifications: (raw?.qualifications ?? []).flatMap(qualificationEntry),
+	hobbies: (raw?.hobbies ?? []).flatMap(hobbyEntry),
 	...(raw?.cvFile?.url
 		? { cvFile: { url: raw.cvFile.url, ...(raw.cvFile.size ? { size: raw.cvFile.size } : {}) } }
 		: {}),

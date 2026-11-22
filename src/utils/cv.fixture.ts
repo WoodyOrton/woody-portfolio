@@ -1,4 +1,4 @@
-import type { Cv, ExperienceEntry, QualificationEntry } from './cv.types';
+import type { Cv, ExperienceEntry, HobbyEntry, QualificationEntry } from './cv.types';
 
 export const placement: ExperienceEntry = {
 	_key: 'placement',
@@ -7,6 +7,7 @@ export const placement: ExperienceEntry = {
 	period: 'Jun – Sep 2024',
 	location: 'Essex',
 	description: 'Ran brake fade tests on the dyno and cut test setup time by a third.',
+	slug: 'placement-engineer-ford',
 };
 
 export const society: ExperienceEntry = {
@@ -32,13 +33,38 @@ export const aLevels: QualificationEntry = {
 	period: '2020 – 2022',
 };
 
+export const saturdayJob: ExperienceEntry = {
+	_key: 'saturday',
+	role: 'Mechanic',
+	organisation: 'Hill Garage',
+	period: '2019 – 2021',
+	description: 'Serviced cars and ran MOT prep.',
+};
+
+export const bartender: ExperienceEntry = {
+	_key: 'bar',
+	role: 'Bar staff',
+	organisation: 'The Plough',
+	period: '2018',
+};
+
+export const karting: HobbyEntry = {
+	_key: 'karting',
+	name: 'Karting',
+	period: 'Since 2012',
+	description: 'Club racing at weekends, and tuning my own engine.',
+};
+
+export const climbing: HobbyEntry = { _key: 'climbing', name: 'Climbing' };
+
 export const full: Cv = {
-	experience: [placement, society],
+	previousJobs: [saturdayJob, bartender],
 	qualifications: [degree, aLevels],
+	hobbies: [karting, climbing],
 	cvFile: { url: 'https://cdn.sanity.io/files/abc/production/cv123.pdf', size: 153600 },
 };
 
-export const empty: Cv = { experience: [], qualifications: [] };
+export const empty: Cv = { previousJobs: [], qualifications: [], hobbies: [] };
 
 export const longEntry: ExperienceEntry = {
 	_key: 'long',

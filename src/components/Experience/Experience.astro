@@ -3,21 +3,25 @@ import type { ExperienceEntry } from '../../utils/cv.types';
 
 interface Props {
 	entries: ExperienceEntry[];
+	/** Reused for the Previous jobs section, which has the same shape. */
+	heading?: string;
+	/** Anchor for links such as /#experience. */
+	id?: string;
 }
 
-const { entries } = Astro.props;
+const { entries, heading = 'Experience', id = 'experience' } = Astro.props;
 ---
 
 {
 	entries.length > 0 && (
-		<section class="cv" id="experience" aria-labelledby="experience-heading">
-			<h2 id="experience-heading">Experience</h2>
+		<section class="cv" id={id} aria-labelledby={`${id}-heading`}>
+			<h2 id={`${id}-heading`}>{heading}</h2>
 			<ol>
-				{entries.map(({ role, organisation, period, location, description }) => (
+				{entries.map(({ role, organisation, period, location, description, slug }) => (
 					<li>
 						<p class="period">{period}</p>
 						<div>
-							<h3>{role}</h3>
+							<h3>{slug ? <a href={`/experience/${slug}`}>{role}</a> : role}</h3>
 							<p class="where">{[organisation, location].filter(Boolean).join(' · ')}</p>
 							{description && <p class="description">{description}</p>}
 						</div>
@@ -90,6 +94,29 @@ const { entries } = Astro.props;
 		font-weight: var(--weight-body);
 		line-height: var(--leading-snug);
 		letter-spacing: -0.01em;
+	}
+
+	h3 a {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2xs);
+		min-block-size: var(--tap-target);
+		text-decoration: none;
+		color: inherit;
+	}
+
+	h3 a::after {
+		content: '→';
+		color: var(--color-accent);
+		transition: transform var(--duration-base) var(--ease-out);
+	}
+
+	h3 a:hover {
+		color: var(--color-accent);
+	}
+
+	h3 a:hover::after {
+		transform: translateX(0.35em);
 	}
 
 	.where {
