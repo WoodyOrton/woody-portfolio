@@ -10,23 +10,34 @@ interface Props {
 }
 
 const { entries, heading = 'Experience', id = 'experience' } = Astro.props;
+// The main Experience section uses the Projects-style rows; Previous jobs keeps the compact timeline.
+const lead = id === 'experience';
 ---
 
 {
 	entries.length > 0 && (
 		<section class="cv" id={id} aria-labelledby={`${id}-heading`}>
-			<h2 id={`${id}-heading`}>{heading}</h2>
-			<ol>
-				{entries.map(({ role, organisation, period, location, description, slug }) => (
-					<li>
-						<p class="period">{period}</p>
-						<div>
+			<h2 id={`${id}-heading`} class:list={{ lead }}>{heading}</h2>
+			<ol class:list={{ lead }}>
+				{entries.map(({ role, organisation, period, location, description, slug }) =>
+					lead ? (
+						<li>
 							<h3>{slug ? <a href={`/experience/${slug}`}>{role}</a> : role}</h3>
 							<p class="where">{[organisation, location].filter(Boolean).join(' · ')}</p>
+							<p class="period">{period}</p>
 							{description && <p class="description">{description}</p>}
-						</div>
-					</li>
-				))}
+						</li>
+					) : (
+						<li>
+							<p class="period">{period}</p>
+							<div>
+								<h3>{slug ? <a href={`/experience/${slug}`}>{role}</a> : role}</h3>
+								<p class="where">{[organisation, location].filter(Boolean).join(' · ')}</p>
+								{description && <p class="description">{description}</p>}
+							</div>
+						</li>
+					),
+				)}
 			</ol>
 		</section>
 	)
@@ -42,7 +53,7 @@ const { entries, heading = 'Experience', id = 'experience' } = Astro.props;
 	.cv {
 		display: grid;
 		gap: var(--space-m);
-		padding-block-start: var(--space-2xl);
+		padding-block-start: var(--space-l);
 	}
 
 	@media (min-width: 56rem) {
@@ -62,12 +73,24 @@ const { entries, heading = 'Experience', id = 'experience' } = Astro.props;
 		color: var(--color-text-muted);
 	}
 
+	/* The main Experience section matches the Projects heading; Previous jobs keeps the small label like Education. */
+	h2.lead {
+		font-family: var(--font-display);
+		font-size: var(--step-3);
+		font-weight: var(--weight-display);
+		letter-spacing: -0.03em;
+		line-height: var(--leading-snug);
+		text-transform: none;
+		color: inherit;
+	}
+
 	ol {
 		padding: 0;
 		list-style: none;
 		border-block-start: var(--border-hairline);
 	}
 
+	/* Compact timeline (Previous jobs). */
 	li {
 		display: grid;
 		gap: var(--space-3xs);
@@ -129,5 +152,91 @@ const { entries, heading = 'Experience', id = 'experience' } = Astro.props;
 		font-size: var(--step--1);
 		line-height: var(--leading-body);
 		color: var(--color-text-soft);
+	}
+
+	/* Experience: rows follow the Projects list, with the role as the large title and organisation and period as mono labels. */
+	.lead li {
+		position: relative;
+		grid-template-columns: 1fr auto;
+		grid-template-areas:
+			'title title'
+			'where period'
+			'description description';
+		column-gap: var(--space-m);
+		row-gap: var(--space-3xs);
+		align-items: baseline;
+		transition: padding-inline var(--duration-base) var(--ease-out);
+	}
+
+	@media (min-width: 36rem) {
+		.lead li {
+			grid-template-columns: 1fr minmax(8rem, auto) auto;
+			grid-template-areas:
+				'title where period'
+				'description description description';
+		}
+	}
+
+	.lead h3 {
+		grid-area: title;
+		font-size: var(--step-1);
+		font-weight: var(--weight-display);
+		letter-spacing: -0.02em;
+		text-wrap: balance;
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	@media (min-width: 36rem) {
+		.lead h3 {
+			font-size: var(--step-2);
+		}
+	}
+
+	/* The whole row is the link target. */
+	.lead h3 a {
+		display: inline;
+		min-block-size: 0;
+	}
+
+	.lead h3 a::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+	}
+
+	.lead h3 a::after {
+		content: none;
+	}
+
+	.lead li:has(h3 a):is(:hover, :focus-within) {
+		padding-inline: var(--space-s);
+		background: var(--color-surface);
+	}
+
+	.lead li:has(h3 a):is(:hover, :focus-within) h3 {
+		color: var(--color-accent);
+	}
+
+	.lead .where,
+	.lead .period {
+		font-family: var(--font-mono);
+		font-size: var(--step--1);
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+	}
+
+	.lead .where {
+		grid-area: where;
+	}
+
+	.lead .period {
+		grid-area: period;
+		text-align: end;
+		white-space: nowrap;
+	}
+
+	.lead .description {
+		grid-area: description;
 	}
 </style>
