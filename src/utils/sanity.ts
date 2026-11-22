@@ -43,7 +43,7 @@ const BLOCKS_PROJECTION = `blocks[]{
 	}`;
 
 export const PROJECTS_QUERY =
-	defineQuery(`*[_type == "project" && defined(slug.current)] | order(year desc, title asc){
+	defineQuery(`*[_type == "project" && defined(slug.current)] | order(coalesce(orderRank, "~") asc, year desc, title asc){
 	title,
 	"slug": slug.current,
 	system,
@@ -92,6 +92,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(`*[_type == "siteSettings"][0]{
 		asset->{ _id, metadata { lqip, dimensions { width, height } } }
 	},
 	email,
+	linkedinUrl,
 	contactHeading,
 	siteTitle,
 	siteDescription
