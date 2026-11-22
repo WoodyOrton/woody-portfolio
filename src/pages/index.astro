@@ -7,7 +7,6 @@ import Hobbies from '../components/Hobbies/Hobbies.astro';
 import Education from '../components/Education/Education.astro';
 import CvDownload from '../components/CvDownload/CvDownload.astro';
 import Skills from '../components/Skills/Skills.astro';
-import ProjectList from '../components/ProjectList/ProjectList.astro';
 import { getCv, getExperiences, getProjects, getSiteSettings } from '../utils/sanity';
 import HomeProjects from '../components/HomeProjects/HomeProjects.astro';
 
@@ -17,6 +16,7 @@ const [projects, settings, cv, experiences] = await Promise.all([
 	getCv(),
 	getExperiences(),
 ]);
+---
 
 <Base title={settings.siteTitle} description={settings.siteDescription}>
 	<Hero settings={settings} />
