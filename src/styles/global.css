@@ -58,6 +58,18 @@ a {
 	border-radius: var(--radius-s);
 }
 
+/* Every other home section gets a faint full-bleed band so they read as distinct. */
+main > section {
+	padding-block-end: var(--space-xl);
+}
+
+main > section:nth-of-type(even) {
+	background-color: var(--color-band);
+	/* The section is content-width; extend its fill to the viewport edges. */
+	box-shadow: 0 0 0 100vmax var(--color-band);
+	clip-path: inset(0 -100vmax);
+}
+
 /* Rich text from the CMS. The one place prose is styled; blocks add the `prose` class, not their own rules. */
 .prose {
 	display: grid;

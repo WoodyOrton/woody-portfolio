@@ -30,6 +30,8 @@
 	--color-accent: var(--green-700);
 	--color-accent-soft: var(--green-100);
 	--color-border: var(--paper-300);
+	/* Alternate section bands. Translucent so it sits evenly over the page gradient. */
+	--color-band: color-mix(in srgb, var(--green-600) 9%, transparent);
 	--color-focus: var(--green-600);
 	/* LinkedIn's brand blue, used only for its icon. 5.1:1 on the paper background. */
 	--color-linkedin: #0a66c2;
