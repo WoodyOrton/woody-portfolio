@@ -31,4 +31,16 @@ describe('Header', () => {
 			expect(html).not.toMatch(/>\s*Work\s*</);
 		});
 	});
+
+	describe('given the main navigation links', () => {
+		it('links to the experience section, between About and Contact', async () => {
+			const html = await container.renderToString(Header, { props: { name: 'Woody Orton' } });
+			expect(html).toMatch(/<a[^>]*href="\/#experience"[^>]*>\s*Experience\s*<\/a>/);
+			const order = ['About', 'Experience', 'Contact'].map((label) =>
+				html.search(new RegExp(`>\\s*${label}\\s*<`)),
+			);
+			expect(order).toEqual([...order].sort((a, b) => a - b));
+			expect(order.every((i) => i > -1)).toBe(true);
+		});
+	});
 });
