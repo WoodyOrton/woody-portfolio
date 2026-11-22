@@ -7,6 +7,7 @@ const { name } = Astro.props;
 const links = [
 	{ href: '/projects', label: 'Projects' },
 	{ href: '/#about', label: 'About' },
+	{ href: '/#experience', label: 'Experience' },
 	{ href: '/#contact', label: 'Contact' },
 ];
 ---
@@ -92,9 +93,22 @@ const links = [
 		color: var(--color-bg);
 	}
 
+	/* Four links need to fit inside the pill on a phone, so the spacing tightens. Tap targets stay 44px tall. */
 	@media (max-width: 40rem) {
+		ul {
+			gap: 0;
+		}
+
 		a:not(.mark) {
-			padding-inline: var(--space-xs);
+			padding-inline: var(--space-2xs);
+			letter-spacing: 0.02em;
+		}
+	}
+
+	@media (max-width: 22rem) {
+		a:not(.mark) {
+			padding-inline: var(--space-3xs);
+			letter-spacing: 0;
 		}
 	}
 </style>
