@@ -157,64 +157,6 @@ export const cv = defineType({
 			type: 'file',
 			options: { accept: 'application/pdf' },
 		}),
-		defineField({
-			name: 'experience',
-			title: 'Experience (old list)',
-			description:
-				'Work, placements and team roles. Newest first: drag to reorder. Keep each description to what you did and the result.',
-			type: 'array',
-			readOnly: true,
-			deprecated: {
-				reason:
-					'Each experience now has its own page under Experience in the menu. Copy these entries across, then ignore this list: it is no longer shown on the site.',
-			},
-			of: [
-				defineArrayMember({
-					type: 'object',
-					name: 'experienceEntry',
-					fields: [
-						defineField({
-							name: 'role',
-							title: 'Role',
-							description: 'For example Placement engineer.',
-							type: 'string',
-							validation: (rule) => rule.required().max(80),
-						}),
-						defineField({
-							name: 'organisation',
-							title: 'Organisation',
-							type: 'string',
-							validation: (rule) => rule.required().max(80),
-						}),
-						defineField({
-							name: 'period',
-							title: 'Dates',
-							description: 'For example Jun – Sep 2024, or 2023 – Present.',
-							type: 'string',
-							validation: (rule) => rule.required().max(30),
-						}),
-						defineField({
-							name: 'location',
-							title: 'Location',
-							description: 'Optional. A town or city.',
-							type: 'string',
-							validation: (rule) => rule.max(60),
-						}),
-						defineField({
-							name: 'description',
-							title: 'What you did',
-							description:
-								'Optional. One or two sentences. Start with a verb and include a number if you can, for example "Cut test setup time by a third".',
-							type: 'text',
-							rows: 3,
-							validation: (rule) => rule.max(200),
-						}),
-					],
-					preview: { select: { title: 'role', subtitle: 'organisation' } },
-				}),
-			],
-			validation: (rule) => rule.max(8),
-		}),
 	],
 	preview: { prepare: () => ({ title: 'Education, previous jobs and hobbies' }) },
 });

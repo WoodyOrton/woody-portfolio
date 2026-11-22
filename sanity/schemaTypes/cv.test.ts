@@ -39,19 +39,17 @@ describe('Experience and education schema', () => {
 		expect(cv.name).toBe('cv');
 	});
 
-	it('has previous jobs, education, hobbies and a CV file, then the old experience list', () => {
+	it('has previous jobs, education, hobbies and a CV file', () => {
 		expect(fields.map((f) => f.name)).toEqual([
 			'previousJobs',
 			'qualifications',
 			'hobbies',
 			'cvFile',
-			'experience',
 		]);
 	});
 
-	it('keeps the old experience list, marked as moved, so nothing is lost before it is copied across', () => {
-		const old = field('experience') as unknown as { deprecated?: { reason: string } };
-		expect(old.deprecated?.reason).toMatch(/Experience/);
+	it('no longer has the old experience list, which now lives in the Experience documents', () => {
+		expect(field('experience')).toBeUndefined();
 	});
 
 	it('limits how many entries there can be', () => {
