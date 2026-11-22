@@ -39,19 +39,37 @@ describe('Experience and education schema', () => {
 		expect(cv.name).toBe('cv');
 	});
 
-	it('has experience, qualifications and a CV file', () => {
-		expect(fields.map((f) => f.name)).toEqual(['experience', 'qualifications', 'cvFile']);
+	it('has previous jobs, education, hobbies and a CV file, then the old experience list', () => {
+		expect(fields.map((f) => f.name)).toEqual([
+			'previousJobs',
+			'qualifications',
+			'hobbies',
+			'cvFile',
+			'experience',
+		]);
+	});
+
+	it('keeps the old experience list, marked as moved, so nothing is lost before it is copied across', () => {
+		const old = field('experience') as unknown as { deprecated?: { reason: string } };
+		expect(old.deprecated?.reason).toMatch(/Experience/);
 	});
 
 	it('limits how many entries there can be', () => {
-		expect(rulesOf(field('experience'))).toContain('max(8)');
+		expect(rulesOf(field('previousJobs'))).toContain('max(12)');
 		expect(rulesOf(field('qualifications'))).toContain('max(6)');
+		expect(rulesOf(field('hobbies'))).toContain('max(10)');
 	});
 
-	it('requires the role, organisation and period of each experience entry', () => {
+	it('requires the role, organisation and period of each previous job', () => {
 		for (const name of ['role', 'organisation', 'period']) {
-			expect(rulesOf(entryField('experience', name))).toContain('required');
+			expect(rulesOf(entryField('previousJobs', name))).toContain('required');
 		}
+	});
+
+	it('requires only a name for each hobby', () => {
+		expect(rulesOf(entryField('hobbies', 'name'))).toContain('required');
+		expect(rulesOf(entryField('hobbies', 'period'))).not.toContain('required');
+		expect(rulesOf(entryField('hobbies', 'description'))).not.toContain('required');
 	});
 
 	it('requires the qualification, institution and period of each qualification', () => {
@@ -61,7 +79,8 @@ describe('Experience and education schema', () => {
 	});
 
 	it('keeps descriptions short', () => {
-		expect(rulesOf(entryField('experience', 'description'))).toContain('max(200)');
+		expect(rulesOf(entryField('previousJobs', 'description'))).toContain('max(200)');
+		expect(rulesOf(entryField('hobbies', 'description'))).toContain('max(200)');
 		expect(rulesOf(entryField('qualifications', 'detail'))).toContain('max(200)');
 	});
 

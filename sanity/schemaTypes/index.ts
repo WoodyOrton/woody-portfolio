@@ -3,10 +3,17 @@ import { heading } from '../../src/blocks/Heading/heading.schema';
 import { imageSet } from '../../src/blocks/ImageSet/imageSet.schema';
 import { richText } from '../../src/blocks/RichText/richText.schema';
 import { cv } from './cv';
+import { experience } from './experience';
 import { project } from './project';
 import { siteSettings } from './siteSettings';
 
 // Each block's schema lives in src/blocks/<BlockName>/ and is added here when the block is built.
 const blockSchemas: SchemaTypeDefinition[] = [heading, richText, imageSet];
 
-export const schemaTypes: SchemaTypeDefinition[] = [siteSettings, cv, project, ...blockSchemas];
+export const schemaTypes: SchemaTypeDefinition[] = [
+	siteSettings,
+	cv,
+	project,
+	experience,
+	...blockSchemas,
+];

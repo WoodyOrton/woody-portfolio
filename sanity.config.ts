@@ -7,7 +7,7 @@ import { schemaTypes } from './sanity/schemaTypes';
 // Documents there is only one of. They get a fixed entry in the Studio and cannot be created, duplicated or deleted.
 const singletons = [
 	{ type: 'siteSettings', title: 'Site settings' },
-	{ type: 'cv', title: 'Experience and education' },
+	{ type: 'cv', title: 'Education, previous jobs and hobbies' },
 ];
 const singletonTypes = singletons.map(({ type }) => type);
 // Document types that get their own drag-and-drop list instead of the default one.

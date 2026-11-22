@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CV_QUERY } from './sanity';
 import { formatFileSize, resolveCv } from './cv';
-import { degree, full, placement } from './cv.fixture';
+import { bartender, degree, full, karting, saturdayJob } from './cv.fixture';
 
 describe('CV query', () => {
 	it('looks up the single experience and education document', () => {
@@ -9,7 +9,19 @@ describe('CV query', () => {
 		expect(CV_QUERY).toContain('[0]');
 	});
 
-	it('fetches each experience and qualification field the site shows', () => {
+	it('no longer fetches the old experience list, which now has a page each', () => {
+		expect(CV_QUERY).not.toContain('experience[]');
+	});
+
+	it('fetches the previous jobs and hobbies the site shows', () => {
+		expect(CV_QUERY).toContain('previousJobs[]');
+		expect(CV_QUERY).toContain('hobbies[]');
+		for (const field of ['name', 'period', 'description']) {
+			expect(CV_QUERY).toContain(field);
+		}
+	});
+
+	it('fetches each previous job and qualification field the site shows', () => {
 		for (const field of [
 			'role',
 			'organisation',
@@ -35,7 +47,7 @@ describe('CV query', () => {
 describe('CV data', () => {
 	describe('given no document', () => {
 		it('has no entries and no file', () => {
-			expect(resolveCv(null)).toEqual({ experience: [], qualifications: [] });
+			expect(resolveCv(null)).toEqual({ previousJobs: [], qualifications: [], hobbies: [] });
 		});
 	});
 
@@ -47,23 +59,34 @@ describe('CV data', () => {
 
 	describe('given entries that are missing required fields', () => {
 		const cv = resolveCv({
-			experience: [{ _key: 'a', role: 'Engineer' }, placement],
+			previousJobs: [{ _key: 'a', role: 'Engineer' }, saturdayJob],
 			qualifications: [{ _key: 'b', qualification: 'BEng', institution: 'Uni' }, degree],
+			hobbies: [{ _key: 'c', description: 'No name' }, karting],
 		});
 
 		it('leaves them out', () => {
-			expect(cv.experience).toEqual([placement]);
+			expect(cv.previousJobs).toEqual([saturdayJob]);
 			expect(cv.qualifications).toEqual([degree]);
+			expect(cv.hobbies).toEqual([karting]);
 		});
 	});
 
 	describe('given blank optional fields', () => {
 		it('treats them as not filled in', () => {
-			const [entry] = resolveCv({
-				experience: [{ ...placement, location: ' ', description: '' }],
-			}).experience;
-			expect(entry?.location).toBeUndefined();
-			expect(entry?.description).toBeUndefined();
+			const cv = resolveCv({
+				previousJobs: [{ ...saturdayJob, location: ' ', description: '' }],
+				hobbies: [{ ...karting, period: ' ', description: '' }],
+			});
+			expect(cv.previousJobs[0]?.location).toBeUndefined();
+			expect(cv.previousJobs[0]?.description).toBeUndefined();
+			expect(cv.hobbies[0]?.period).toBeUndefined();
+			expect(cv.hobbies[0]?.description).toBeUndefined();
+		});
+
+		it('keeps a job or hobby that has only its required fields', () => {
+			const cv = resolveCv({ previousJobs: [bartender], hobbies: [{ _key: 'x', name: 'Chess' }] });
+			expect(cv.previousJobs).toEqual([bartender]);
+			expect(cv.hobbies).toEqual([{ _key: 'x', name: 'Chess' }]);
 		});
 	});
 
